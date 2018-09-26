@@ -54,8 +54,16 @@ const parseTweet = async (page, tweet, options) => {
     const images_t = await tweet.$$eval('.AdaptiveMedia-photoContainer',
         nodes => nodes.map(n => n.getAttribute('data-image-url')));
     const images_v = await tweet.$$eval('.AdaptiveMedia-photoContainer video',
-        nodes => nodes.map(node => node.getAttribute('poster')))
-    const images = images_t.concat(images_v);
+        nodes => nodes.map(node => node.getAttribute('poster')));
+    const images_b = await tweet.$$eval('.AdaptiveMedia-videoContainer .PlayableMedia-player',
+        nodes => nodes.map(element => {
+            let el = element.querySelector('.PlayableMedia-reactWrapper');
+            if (el) el.setAttribute('style', 'display: none;');
+
+            const sty = element.getAttribute('style');
+            return sty.match(/:url\(\'(.+)\'\)/).pop();
+        }));
+    const images = images_t.concat(images_v, images_b);
 
     const retweet_num = await tweet.$eval('.stream-item-footer .ProfileTweet-action--retweet .ProfileTweet-actionCount',
         node => node.getAttribute('data-tweet-stat-count'));
@@ -107,6 +115,7 @@ const parseTweet = async (page, tweet, options) => {
         }) : null;
 
     const screenshot = options.doScreenshot ? await tweet.screenshot(Object.assign({}, {
+        // path: 'test.png',
         type: "png",
     }, options.screenshot || null)) : null;
 
