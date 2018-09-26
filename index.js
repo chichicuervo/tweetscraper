@@ -119,6 +119,14 @@ const parseTweet = async (page, tweet, options) => {
 };
 
 const loadStream = async (page, container, options) => {
+
+    await container.$('div.stream-container > div.stream > .stream-items li[data-element-context] > button')
+        .then(async item => {
+            if (item) {
+                await item.click();
+            }
+        });
+
     let position = null;
     await container.$('div.stream-container > div.stream > div.stream-footer')
         .then(async footer => {
@@ -150,6 +158,13 @@ const loadStream = async (page, container, options) => {
                     pages--;
             }
     });
+
+    await container.$('div.stream-container > div.stream > .stream-items li[data-element-context] > button')
+        .then(async item => {
+            if (item) {
+                await item.click();
+            }
+        });
 
     await container.$$('div.stream-container > div.stream > .stream-items li[data-expansion-url] > a')
         .then(async items => {
@@ -201,7 +216,6 @@ const parseContainer = async (page, container, options) => {
             })) : null;
 
         const map_tweets = async nodes => {
-            console.log(nodes);
             for (var i in nodes) {
                 nodes[i] = await parseTweet(page, nodes[i], options);
             }
