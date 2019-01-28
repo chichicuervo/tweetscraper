@@ -43,8 +43,10 @@ const PageHeader = () => (
     </Toolbar>
 );
 
+import SearchForm from 'App/SearchForm';
+
 const PageBody = () => (
-    <div>Yo and/or Ho.</div>
+    <SearchForm />
 );
 
 class Shell extends React.Component {
