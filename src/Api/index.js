@@ -1,3 +1,4 @@
+import os from 'os';
 import path from 'path';
 import express from 'express';
 
@@ -27,10 +28,9 @@ router.get('/tweet/(:user/status/)?:tweet_id([0-9]+)', (req, res) => {
     const timelineMode = req.query.timeline && req.query.timeline == 'full' ? 'full' : doTimeline;
 
     const scrape = new ScrapeTweet({ options: {
-        launch: {
-            // headless: false,
+        launch: os.platform() == 'freebsd' ? {
             executablePath: '/usr/local/bin/chrome',
-        },
+        } : {},
         pages: 99,
         timeline: timelineMode,
         replies: timelineMode == 'full' || (doTimeline && isTrue(req.query.replies || false) ? true : false),
