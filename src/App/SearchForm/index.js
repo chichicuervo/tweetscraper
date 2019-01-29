@@ -179,9 +179,6 @@ class SearchForm extends Component {
         }
     };
 
-    // handleSwitch = switch => event => {
-    // }
-
     render() {
         const { classes, theme, children } = this.props;
         const { spinner, tweetData } = this.state;

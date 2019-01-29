@@ -22,7 +22,7 @@ const isFalse = i => {
 
 router.get('/tweet/(:user/status/)?:tweet_id([0-9]+)', (req, res) => {
 
-    const doTimeline = req.query.timeline || isTrue(req.query.replies || false);
+    const doTimeline = req.query.timeline || isTrue(req.query.replies || false) || isTrue(req.query.parents || false);
     const timelineMode = req.query.timeline && req.query.timeline == 'full' ? 'full' : doTimeline;
 
     const scrape = new ScrapeTweet({ options: {
