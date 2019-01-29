@@ -6,8 +6,6 @@ import ScrapeTweet from '../TweetScraper';
 
 const router = express.Router();
 
-const timeout = 300;
-
 const twitter = 'https://twitter.com/';
 
 router.get('/hello', (req, res) => {
@@ -33,7 +31,7 @@ router.get('/tweet/(:user/status/)?:tweet_id([0-9]+)', (req, res) => {
         } : {},
         pages: 99,
         timeline: timelineMode,
-        replies: timelineMode == 'full' || (doTimeline && isTrue(req.query.replies || false) ? true : false),
+        replies: timelineMode == 'full' || isTrue(req.query.replies || false),
         parents: timelineMode == 'full' || isTrue(req.query.parents || false),
         quote: true,
         loadWait: 1250,

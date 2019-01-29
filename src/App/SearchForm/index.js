@@ -7,6 +7,10 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
+import Switch from '@material-ui/core/Switch';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme  => ({
@@ -22,6 +26,13 @@ const styles = theme  => ({
         flexGrow: 1,
         padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
         marginTop: theme.spacing.unit * 8,
+    },
+    subPaperRoot: {
+        display: 'flex',
+        alignItems: 'center',
+        flexGrow: 1,
+        padding: `${theme.spacing.unit * 1}px ${theme.spacing.unit * 3}px`,
+        marginTop: theme.spacing.unit,
     },
     paperResult: {
         display: 'flex',
@@ -60,7 +71,12 @@ class SearchForm extends Component {
     state = {
         spinner: null,
         url: null,
-        tweetData: null
+        tweetData: null,
+        hasTimeline: false,
+        hasReplies: false,
+        hasParents: false,
+        noScreenshot: false,
+        disabledSwitches: false,
     }
 
     doSubmit(event) {
@@ -86,8 +102,34 @@ class SearchForm extends Component {
 
         // const data = new FormData();
         // data.append('file', file, file.name);
+        let frag = '';
+        const {hasTimeline, hasReplies, hasParents, noScreenshot}  = this.state;
+        if (hasTimeline == true) {
+            frag = frag ? (frag + '&') : frag;
+            // frag = frag + 'timeline=' + (noScreenshot ? 'true' : 'full');
+            frag = frag + 'timeline=full';
 
-        fetch(fetch_url, {
+            if (noScreenshot == true) {
+                frag = frag ? (frag + '&') : frag;
+                frag = frag + 'replies=true&parents=true';
+            }
+        } else {
+            if (hasReplies == true) {
+                frag = frag ? (frag + '&') : frag;
+                frag = frag + 'replies=true';
+            }
+            if (hasParents == true) {
+                frag = frag ? (frag + '&') : frag;
+                frag = frag + 'parents=true';
+            }
+        }
+
+        if (noScreenshot == true) {
+            frag = frag ? (frag + '&') : frag;
+            frag = frag + 'screenshot=false';
+        }
+
+        fetch(fetch_url + (frag ? ('?' + frag) : ''), {
 
         })
         .then(res => res.json())
@@ -125,6 +167,21 @@ class SearchForm extends Component {
         });
     }
 
+    handleSwitch = name => event => {
+        this.setState({
+            [name]: event.target.checked
+        })
+
+        if (name == 'hasTimeline') {
+            this.setState({
+                disabledSwitches: event.target.checked
+            });
+        }
+    };
+
+    // handleSwitch = switch => event => {
+    // }
+
     render() {
         const { classes, theme, children } = this.props;
         const { spinner, tweetData } = this.state;
@@ -152,6 +209,36 @@ class SearchForm extends Component {
                             </Typography>
                         </Button>
                     )}
+                </Paper>
+                <Paper className={classes.subPaperRoot} >
+                    <FormGroup row>
+                        <FormControlLabel control={
+                            <Switch value="fullTimeline" color="primary"
+                                checked={this.state.hasTimeline}
+                                onChange={this.handleSwitch('hasTimeline')}
+                            />
+                        } label="Full Timeline, incl. Reply/Parent Objects" />
+                        <FormControlLabel control={
+                            <Switch value="replies" color="primary"
+                                checked={this.state.hasReplies}
+                                disabled={this.state.disabledSwitches}
+                                onChange={this.handleSwitch('hasReplies')}
+                            />
+                        } label="Include Reply List" />
+                        <FormControlLabel control={
+                            <Switch value="parents" color="primary"
+                                checked={this.state.hasParents}
+                                disabled={this.state.disabledSwitches}
+                                onChange={this.handleSwitch('hasParents')}
+                            />
+                        } label="Include Parent List" />
+                        <FormControlLabel control={
+                            <Switch value="no_screenshot" color="secondary"
+                                checked={this.state.noScreenshot}
+                                onChange={this.handleSwitch('noScreenshot')}
+                            />
+                        } label="No Screenshots" />
+                    </FormGroup>
                 </Paper>
             </form>
             {tweetData && (<>

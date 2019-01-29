@@ -10,6 +10,7 @@ const DEFAULT_OPTIONS = {
     parents: true,
     quote: true,
     loadWait: 1000,
+    pageWaitMode: 'networkidle0',
     doScreenshot: false,
     screenshot: {
         type: "png",
@@ -342,7 +343,9 @@ class ScrapeTweet {
         const page = await this.getPage();
         // console.log(page);
 
-        return await page.goto(url)
+        return await page.goto(url, {
+            waitUntil: this.options.pageWaitMode || 'load'
+        })
             .then(async response => {
                 if (!response.ok()) {
                     throw "Bad Response";
@@ -366,7 +369,9 @@ class ScrapeTweet {
     async getTimeline(url) {
         const page = await this.getPage();
 
-        return await page.goto(url)
+        return await page.goto(url, {
+            waitUntil: this.options.pageWaitMode || 'load'
+        })
             .then(async response => {
                 if (!response.ok()) {
                     throw "Bad Response";
@@ -395,7 +400,9 @@ class ScrapeTweet {
     async getSearch(url) {
         const page = await this.getPage();
 
-        return await page.goto(url)
+        return await page.goto(url, {
+            waitUntil: this.options.pageWaitMode || 'load'
+        })
             .then(async response => {
                 if (!response.ok()) {
                     throw "Bad Response";
