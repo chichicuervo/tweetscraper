@@ -46,10 +46,11 @@ router.get('/tweet/(:user/status/)?:tweet_id([0-9]+)', (req, res) => {
             delete data.screenshot;
         }
         res.json(data);
+        scrape.close();
     }).catch(err => {
         res.end();
+        scrape.close()
     });
-
 });
 
 

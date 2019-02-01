@@ -1,5 +1,0 @@
-#!/bin/sh
-
-cd /www
-exec 2>&1
-exec /usr/bin/npm run start:prod
