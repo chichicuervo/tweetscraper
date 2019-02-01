@@ -10,7 +10,7 @@
         "start": "npm run build && npm run start:prod"
     },
     "author": "Jason Belich <jason@belich.com>",
-    "license": "ISC",
+    "license": "MIT",
     "devDependencies": {
         "@babel/core": "^7.2.0",
         "@babel/node": "^7.2.0",
