@@ -45,6 +45,6 @@
         "react-transition-group": "^2.5.1",
         "recompose": "^0.30.0",
         "typeface-roboto": "0.0.54",
-        "puppeteer": "^1.8.0"
+        "puppeteer": "1.11.0"
     }
 }

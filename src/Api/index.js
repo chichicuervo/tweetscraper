@@ -28,7 +28,10 @@ router.get('/tweet/(:user/status/)?:tweet_id([0-9]+)', (req, res) => {
     const scrape = new ScrapeTweet({ options: {
         launch: os.platform() == 'freebsd' ? {
             executablePath: '/usr/local/bin/chrome',
-        } : {},
+            dumpio: true,
+        } : {
+            dumpio: true,
+        },
         pages: 99,
         timeline: timelineMode,
         replies: timelineMode == 'full' || isTrue(req.query.replies || false),
